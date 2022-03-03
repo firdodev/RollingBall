@@ -20,6 +20,7 @@
     "webpack-dev-server": "^4.7.4"
   },
   "dependencies": {
-    "@babylonjs/loaders": "^4.2.1"
+    "@babylonjs/loaders": "^4.2.1",
+    "ammo.js": "github:kripken/ammo.js"
   }
 }

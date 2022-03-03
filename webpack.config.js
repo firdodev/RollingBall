@@ -10,7 +10,15 @@ module.exports = {
         clean: true,
     },
     resolve: {
-        extensions: [".tsx", ".ts", ".js"],
+        extensions: [
+            ".tsx", 
+            ".ts", 
+            ".js"
+        ],
+        fallback: {
+            "fs": false,
+            "path":false
+          } 
     },
     devServer: {
         host: "0.0.0.0",

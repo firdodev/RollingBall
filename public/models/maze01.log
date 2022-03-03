@@ -11,58 +11,64 @@ Exporter version: 2.93.5, Blender version: 3.0.1
 		Keep Z-up r-handed  :  no
 		Texture directory   :  C:\Users\Hp\Desktop\RollingBall\public\models\
 	Python World class constructor completed
-	WARNING: No active camera has been assigned, or is not in a currently enabled collection
 	processing begun of mesh:  Plane
 		WARNING: No materials have been assigned: 
+		Custom split normals with tangents being used
 		num positions      :  4
 		num normals        :  4
-		num tangents       :  0
+		num tangents       :  16
 		num uvs            :  8
 		num uvs2           :  0
 		num colors         :  0
 		num triangles      :  2
-	processing begun of mesh:  Cube
-		WARNING: No materials have been assigned: 
-		num positions      :  29
-		num normals        :  29
-		num tangents       :  0
-		num uvs            :  58
-		num uvs2           :  0
-		num colors         :  0
-		num triangles      :  12
 	processing begun of mesh:  Cube.001
 		WARNING: No materials have been assigned: 
-		num positions      :  29
-		num normals        :  29
-		num tangents       :  0
-		num uvs            :  58
+		Custom split normals with tangents being used
+		num positions      :  24
+		num normals        :  24
+		num tangents       :  96
+		num uvs            :  48
 		num uvs2           :  0
 		num colors         :  0
 		num triangles      :  12
 	processing begun of mesh:  Cube.002
 		WARNING: No materials have been assigned: 
-		num positions      :  29
-		num normals        :  29
-		num tangents       :  0
-		num uvs            :  58
+		Custom split normals with tangents being used
+		num positions      :  24
+		num normals        :  24
+		num tangents       :  96
+		num uvs            :  48
 		num uvs2           :  0
 		num colors         :  0
 		num triangles      :  12
 	processing begun of mesh:  Cube.003
 		WARNING: No materials have been assigned: 
-		num positions      :  29
-		num normals        :  29
-		num tangents       :  0
-		num uvs            :  58
+		Custom split normals with tangents being used
+		num positions      :  24
+		num normals        :  24
+		num tangents       :  96
+		num uvs            :  48
 		num uvs2           :  0
 		num colors         :  0
 		num triangles      :  12
+	processing begun of mesh:  Cube.004
+		WARNING: No materials have been assigned: 
+		Custom split normals with tangents being used
+		num positions      :  24
+		num normals        :  24
+		num tangents       :  96
+		num uvs            :  48
+		num uvs2           :  0
+		num colors         :  0
+		num triangles      :  12
+	processing begun of camera (UniversalCamera):  Camera
+	processing begun of light (POINT):  Light
 ========= Writing of JSON file started =========
 	writing mesh:  Plane
-	writing mesh:  Cube
 	writing mesh:  Cube.001
 	writing mesh:  Cube.002
 	writing mesh:  Cube.003
+	writing mesh:  Cube.004
 ========= Writing of JSON file completed =========
 ========= end of processing =========
-elapsed time:  0 min, 0.0463 secs
+elapsed time:  0 min, 0.0909 secs
