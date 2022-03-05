@@ -9,44 +9,63 @@ export class Mazes{
 	
 	private cubeSize = 5;
 	private platform;
-
+	private wallCube;
+	private cubeRandomColor;
     private maze;
 
 	private maze01 = [
-		[0,0,0,0,0,0,0,0,0,0],
-		[0,0,0,0,0,0,0,0,0,0],
-		[0,0,0,0,0,0,0,0,0,0],
-		[0,0,0,0,0,0,0,0,0,0],
-		[0,0,0,0,0,0,0,0,0,0],
-		[0,0,0,0,0,0,0,0,0,0],
-		[0,0,0,0,0,0,0,0,0,0],
-		[0,0,0,0,0,0,0,0,0,0],
-		[0,0,0,0,0,0,0,0,0,0],
-		[0,0,0,0,0,0,0,0,0,0],
+		[1,1,1,1,1,1,1,1,1,1],
+		[1,0,0,0,0,0,0,0,0,1],
+		[1,0,0,0,0,0,0,0,0,1],
+		[1,0,0,0,0,0,0,0,0,1],
+		[1,0,0,0,0,0,0,0,0,1],
+		[1,0,0,0,0,0,0,0,0,1],
+		[1,0,0,0,0,0,0,0,0,1],
+		[1,0,0,0,0,0,0,0,0,1],
+		[1,0,0,0,0,0,0,0,0,1],
+		[1,1,1,1,1,1,1,1,1,1],
 	];
 
     private centerOfMaze;
     
 	CreateMaze(scene){
-		//Static Maze Created with matrix
-		
-		this.centerOfMaze = new BABYLON.TransformNode("maze");
 
+
+		this.cubeRandomColor = new BABYLON.StandardMaterial("rMAT",scene);
+		this.cubeRandomColor.diffuseColor = new BABYLON.Color3(Math.random() * 1.0, Math.random() * 1.0, Math.random() * 1.0);
+		
+		//TODO:Rrregullo Kodin Asynchron
+		//Static Maze Created with matrix
+		this.centerOfMaze = new BABYLON.TransformNode("maze");
 		for(let y = 0; y < this.maze01.length; y++){
 			for(let x = 0; x < this.maze01[y].length; x++){
 				this.platform = BABYLON.MeshBuilder.CreateBox("cube",{width:this.cubeSize,height:0.1,depth:this.cubeSize},scene);
-				var cubeRandomColor = new BABYLON.StandardMaterial("rMAT",scene);
-				cubeRandomColor.diffuseColor = new BABYLON.Color3(Math.random() * 1.0, Math.random() * 1.0, Math.random() * 1.0);
-				this.platform.material = cubeRandomColor;
-				
+				this.platform.material = this.cubeRandomColor;
+		
 				this.platform.position.x = x * this.cubeSize;
 				this.platform.position.y = 0;
 				this.platform.position.z = y * this.cubeSize;
 				this.platform.physicsImpostor = new BABYLON.PhysicsImpostor(this.platform,PhysicsImpostor.BoxImpostor,{mass:0,restitution:0,friction:100});
 				this.platform.parent = this.centerOfMaze;
+				
 			}
 		}
 
+		for(let y = 0; y < this.maze01.length; y++){
+			for(let x = 0; x < this.maze01[y].length; x++){
+				if(this.maze01[x][y] === 1){
+					this.wallCube = BABYLON.MeshBuilder.CreateBox("wall",{width:this.cubeSize, height:this.cubeSize, depth:this.cubeSize},scene);
+					this.wallCube.material = this.cubeRandomColor;
+					
+					this.wallCube.position.x = x * this.cubeSize;
+					this.wallCube.position.y = 1;
+					this.wallCube.position.z = y * this.cubeSize;
+
+					this.wallCube.parent = this.centerOfMaze;					
+								
+				}
+			}
+		}
 		//Static Maze Created with blender
 		/*
         var brick = new BABYLON.StandardMaterial("myMaterial", scene);
@@ -70,7 +89,7 @@ export class Mazes{
             }
         );*/
 
-    //console.log(this.centerOfMaze.position);
+		//console.log(this.centerOfMaze.position);
     }
 
     MoveForward(){
