@@ -5,7 +5,7 @@ import * as BABYLON from "@babylonjs/core";
 import "@babylonjs/loaders";
 import { MeshEmitterGridComponent } from "@babylonjs/inspector/components/actionTabs/tabs/propertyGrids/particleSystems/meshEmitterGridComponent";
 import Ammo from "ammo.js";
-import { AmmoJSPlugin, PhysicsImpostor, Vector3 } from "@babylonjs/core";
+import { AmmoJSPlugin, MeshBuilder, PhysicsImpostor, Size, Vector3 } from "@babylonjs/core";
 import { Mazes } from "./mazes";
 import { Ball } from "./ball";
 
@@ -39,10 +39,13 @@ class App {
         //Creates Physics and Meshes
         this.CreatePhysics(scene);
 
+        //Create Camera
         var camera: BABYLON.ArcRotateCamera = new BABYLON.ArcRotateCamera("Camera", 3.15, 0.62, 20, new BABYLON.Vector3(-31, 39.52, 0.8), scene);
         camera.attachControl(canvas, true);
         camera.lowerRadiusLimit = 20;
         camera.upperRadiusLimit = 40;
+        
+        //Create Light
         var light1: BABYLON.HemisphericLight = new BABYLON.HemisphericLight("light1", new BABYLON.Vector3(1, 1, 0), scene);
 
         // hide/show the Inspector
@@ -56,18 +59,18 @@ class App {
                 }
             }
 
-            // if(ev.keyCode == 87){
-            //     this.ball.MoveForward();
-            // }
-            // if(ev.keyCode == 83){
-            //     this.ball.MoveBack();
-            // }
-            // if(ev.keyCode == 65){
-            //     this.ball.MoveLeft();
-            // }
+            if(ev.keyCode == 87){
+                this.maze.MoveForward();
+            }
+            if(ev.keyCode == 83){
+                this.maze.MoveBack();
+            }
+            if(ev.keyCode == 65){
+                this.maze.MoveLeft();
+            }
             if(ev.keyCode == 68){
-                // this.ball.MoveRight();
-                this.maze.RotateRight();
+                this.maze.MoveRight();
+                // this.maze.RotateRight();
                 
             }
         });
@@ -86,6 +89,11 @@ class App {
 
         this.maze.CreateMaze(scene);
         this.ball.CreateBall(scene);
+
+
+        // var cube = BABYLON.MeshBuilder.CreateBox("cube",{size:10},scene);
+        // cube.physicsImpostor = new BABYLON.PhysicsImpostor(cube,PhysicsImpostor.BoxImpostor,{mass:10,friction:1});
+        // cube.position = new BABYLON.Vector3(3,10,0);
     }
     
 }

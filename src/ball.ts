@@ -8,36 +8,35 @@ import Ammo from "ammo.js";
 import { AmmoJSPlugin, PhysicsImpostor, Vector3 } from "@babylonjs/core";
 
 export class Ball{
-    private sphere:BABYLON.Mesh;
+    public sphere:BABYLON.Mesh;
+
+    private rotSpeed = .5;
 
     CreateBall(scene){
         this.sphere = BABYLON.MeshBuilder.CreateSphere("sphere", { diameter: 5 }, scene);
         this.sphere.position.y = 10;
 
+        //Material
         var sphereMat = new BABYLON.StandardMaterial("sphereMat", scene);
-        // sphereMat.diffuseColor = BABYLON.Color3.Red(); ==> Red Color of Sphere
         sphereMat.diffuseTexture = new BABYLON.Texture("textures/Marble/Marble006_4K_Color.jpg", scene);
         sphereMat.bumpTexture = new BABYLON.Texture("textures/Marble/Marble006_4K_NormalDX.jpg", scene);
         this.sphere.material = sphereMat;
-        
-        this.sphere.physicsImpostor = new BABYLON.PhysicsImpostor(
-            this.sphere,
-            PhysicsImpostor.SphereImpostor,
-            {mass:1,friction:1}
-        );
-        this.sphere.physicsImpostor.applyImpulse(new BABYLON.Vector3(0, 5, 0), BABYLON.Vector3.Zero());
+
+        //Physics
+        this.sphere.physicsImpostor = new BABYLON.PhysicsImpostor(this.sphere, PhysicsImpostor.SphereImpostor, {mass:1,friction:1,restitution:0});
+        // this.sphere.physicsImpostor.applyImpulse(new BABYLON.Vector3(0, 5, 0), BABYLON.Vector3.Zero());
     }
 
-    // MoveForward(){
-    //     this.sphere.physicsImpostor.applyImpulse(new BABYLON.Vector3(1,0,0),BABYLON.Vector3.Zero());
-    // }
-    // MoveBack(){
-    //     this.sphere.physicsImpostor.applyImpulse(new BABYLON.Vector3(-1,0,0),BABYLON.Vector3.Zero());
-    // }
-    // MoveLeft(){
-    //     this.sphere.physicsImpostor.applyImpulse(new BABYLON.Vector3(0,0,1),BABYLON.Vector3.Zero());
-    // }
-    // MoveRight(){
-    //     this.sphere.physicsImpostor.applyImpulse(new BABYLON.Vector3(0,0,-1),BABYLON.Vector3.Zero());
-    // }
+    MoveForward(){
+        this.sphere.physicsImpostor.applyImpulse(new BABYLON.Vector3(this.rotSpeed,0,0),BABYLON.Vector3.Zero());
+}
+    MoveBack(){
+        this.sphere.physicsImpostor.applyImpulse(new BABYLON.Vector3(-this.rotSpeed,0,0),BABYLON.Vector3.Zero());
+    }
+    MoveLeft(){
+        this.sphere.physicsImpostor.applyImpulse(new BABYLON.Vector3(0,0,this.rotSpeed),BABYLON.Vector3.Zero());
+    }
+    MoveRight(){
+        this.sphere.physicsImpostor.applyImpulse(new BABYLON.Vector3(0,0,-this.rotSpeed),BABYLON.Vector3.Zero());
+    }
 }
