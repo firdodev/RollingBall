@@ -58,7 +58,8 @@ class App {
                     scene.debugLayer.show();
                 }
             }
-
+			
+			//Change it from this.maze.MoveForward to this.ball.MoveForward for each if statement so you can move the ball and not the platform
             if(ev.keyCode == 87){
                 this.maze.MoveForward();
             }

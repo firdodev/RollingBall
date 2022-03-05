@@ -3,14 +3,52 @@ import "@babylonjs/inspector";
 import "@babylonjs/loaders/glTF";
 import * as BABYLON from "@babylonjs/core";
 import "@babylonjs/loaders";
-import { MeshEmitterGridComponent } from "@babylonjs/inspector/components/actionTabs/tabs/propertyGrids/particleSystems/meshEmitterGridComponent";
-import Ammo from "ammo.js";
-import { AmmoJSPlugin, PhysicsImpostor, SceneLoader, Vector3 } from "@babylonjs/core";
+import { PhysicsImpostor} from "@babylonjs/core";
 
 export class Mazes{
+	
+	private cubeSize = 5;
+	private platform;
+
     private maze;
+
+	private maze01 = [
+		[0,0,0,0,0,0,0,0,0,0],
+		[0,0,0,0,0,0,0,0,0,0],
+		[0,0,0,0,0,0,0,0,0,0],
+		[0,0,0,0,0,0,0,0,0,0],
+		[0,0,0,0,0,0,0,0,0,0],
+		[0,0,0,0,0,0,0,0,0,0],
+		[0,0,0,0,0,0,0,0,0,0],
+		[0,0,0,0,0,0,0,0,0,0],
+		[0,0,0,0,0,0,0,0,0,0],
+		[0,0,0,0,0,0,0,0,0,0],
+	];
+
     private centerOfMaze;
-    CreateMaze(scene){
+    
+	CreateMaze(scene){
+		//Static Maze Created with matrix
+		
+		this.centerOfMaze = new BABYLON.TransformNode("maze");
+
+		for(let y = 0; y < this.maze01.length; y++){
+			for(let x = 0; x < this.maze01[y].length; x++){
+				this.platform = BABYLON.MeshBuilder.CreateBox("cube",{width:this.cubeSize,height:0.1,depth:this.cubeSize},scene);
+				var cubeRandomColor = new BABYLON.StandardMaterial("rMAT",scene);
+				cubeRandomColor.diffuseColor = new BABYLON.Color3(Math.random() * 1.0, Math.random() * 1.0, Math.random() * 1.0);
+				this.platform.material = cubeRandomColor;
+				
+				this.platform.position.x = x * this.cubeSize;
+				this.platform.position.y = 0;
+				this.platform.position.z = y * this.cubeSize;
+				this.platform.physicsImpostor = new BABYLON.PhysicsImpostor(this.platform,PhysicsImpostor.BoxImpostor,{mass:0,restitution:0,friction:100});
+				this.platform.parent = this.centerOfMaze;
+			}
+		}
+
+		//Static Maze Created with blender
+		/*
         var brick = new BABYLON.StandardMaterial("myMaterial", scene);
         this.centerOfMaze = new BABYLON.TransformNode("maze");
         brick.diffuseTexture = new BABYLON.Texture("textures/Bricks/Bricks075A_2K_Color.jpg", scene);
@@ -30,9 +68,9 @@ export class Mazes{
                     meshes[i].parent = this.centerOfMaze;   
                 }
             }
-        );
+        );*/
 
-        console.log(this.centerOfMaze.position);
+    //console.log(this.centerOfMaze.position);
     }
 
     MoveForward(){
