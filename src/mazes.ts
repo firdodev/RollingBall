@@ -5,8 +5,7 @@ import * as BABYLON from "@babylonjs/core";
 import "@babylonjs/loaders";
 import { PhysicsImpostor} from "@babylonjs/core";
 
-export class Mazes{
-	
+export class Mazes{	
 	private cubeSize = 5;
 	private platform;
 	private wallCube;
@@ -34,6 +33,7 @@ export class Mazes{
 		this.cubeRandomColor.diffuseColor = new BABYLON.Color3(Math.random() * 1.0, Math.random() * 1.0, Math.random() * 1.0);
 		
 		//TODO:Rrregullo Kodin Asynchron
+		
 		//Static Maze Created with matrix
 		this.centerOfMaze = new BABYLON.TransformNode("maze");
 
