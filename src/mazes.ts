@@ -5,8 +5,7 @@ import * as BABYLON from "@babylonjs/core";
 import "@babylonjs/loaders";
 import { PhysicsImpostor} from "@babylonjs/core";
 
-export class Mazes{
-	
+export class Mazes{	
 	private cubeSize = 5;
 	private platform;
 	private wallCube;
@@ -35,6 +34,7 @@ export class Mazes{
 		this.cubeRandomColor.diffuseColor = new BABYLON.Color3(Math.random() * 1.0, Math.random() * 1.0, Math.random() * 1.0);
 		
 		//TODO:Rrregullo Kodin Asynchron
+		
 		//Static Maze Created with matrix
 		this.centerOfMaze = new BABYLON.TransformNode("maze");
 		for(let y = 0; y < this.maze01.length; y++){
@@ -51,21 +51,6 @@ export class Mazes{
 			}
 		}
 
-		for(let y = 0; y < this.maze01.length; y++){
-			for(let x = 0; x < this.maze01[y].length; x++){
-				if(this.maze01[x][y] === 1){
-					this.wallCube = BABYLON.MeshBuilder.CreateBox("wall",{width:this.cubeSize, height:this.cubeSize, depth:this.cubeSize},scene);
-					this.wallCube.material = this.cubeRandomColor;
-					
-					this.wallCube.position.x = x * this.cubeSize;
-					this.wallCube.position.y = 1;
-					this.wallCube.position.z = y * this.cubeSize;
-
-					this.wallCube.parent = this.centerOfMaze;					
-								
-				}
-			}
-		}
 		//Static Maze Created with blender
 		/*
         var brick = new BABYLON.StandardMaterial("myMaterial", scene);
