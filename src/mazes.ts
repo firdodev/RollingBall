@@ -15,9 +15,9 @@ export class Mazes{
 
 	private maze01 = [
 		[1,1,1,1,1,1,1,1,1,1],
-		[1,0,0,0,0,0,0,0,0,1],
-		[1,0,0,0,0,0,0,0,0,1],
-		[1,0,0,0,0,0,0,0,0,1],
+		[1,0,1,0,0,0,0,0,0,1],
+		[1,0,1,0,0,0,0,0,0,1],
+		[1,0,1,1,1,1,1,1,0,1],
 		[1,0,0,0,0,0,0,0,0,1],
 		[1,0,0,0,0,0,0,0,0,1],
 		[1,0,0,0,0,0,0,0,0,1],
@@ -27,7 +27,6 @@ export class Mazes{
 	];
 
     private centerOfMaze;
-    
 	CreateMaze(scene){
 
 
@@ -37,8 +36,21 @@ export class Mazes{
 		//TODO:Rrregullo Kodin Asynchron
 		//Static Maze Created with matrix
 		this.centerOfMaze = new BABYLON.TransformNode("maze");
+
+
 		for(let y = 0; y < this.maze01.length; y++){
 			for(let x = 0; x < this.maze01[y].length; x++){
+				if(this.maze01[x][y] == 1){
+					this.platform = BABYLON.MeshBuilder.CreateBox("wall",{width:this.cubeSize, height:this.cubeSize, depth:this.cubeSize},scene);
+					this.platform.material = this.cubeRandomColor;
+					
+					this.platform.position.x = x * this.cubeSize;
+					this.platform.position.y = 1;
+					this.platform.position.z = y * this.cubeSize;
+
+					this.platform.parent = this.centerOfMaze;					
+								
+				}
 				this.platform = BABYLON.MeshBuilder.CreateBox("cube",{width:this.cubeSize,height:0.1,depth:this.cubeSize},scene);
 				this.platform.material = this.cubeRandomColor;
 		
@@ -51,21 +63,6 @@ export class Mazes{
 			}
 		}
 
-		for(let y = 0; y < this.maze01.length; y++){
-			for(let x = 0; x < this.maze01[y].length; x++){
-				if(this.maze01[x][y] === 1){
-					this.wallCube = BABYLON.MeshBuilder.CreateBox("wall",{width:this.cubeSize, height:this.cubeSize, depth:this.cubeSize},scene);
-					this.wallCube.material = this.cubeRandomColor;
-					
-					this.wallCube.position.x = x * this.cubeSize;
-					this.wallCube.position.y = 1;
-					this.wallCube.position.z = y * this.cubeSize;
-
-					this.wallCube.parent = this.centerOfMaze;					
-								
-				}
-			}
-		}
 		//Static Maze Created with blender
 		/*
         var brick = new BABYLON.StandardMaterial("myMaterial", scene);
