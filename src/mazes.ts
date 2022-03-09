@@ -4,102 +4,115 @@ import "@babylonjs/loaders/glTF";
 import * as BABYLON from "@babylonjs/core";
 import "@babylonjs/loaders";
 import { PhysicsImpostor} from "@babylonjs/core";
+import { Collisions } from "./collision";
+import { Ball } from "./ball";
 
 export class Mazes{	
 	private cubeSize = 5;
 	private platform;
 	private wallCube;
-	private cubeRandomColor;
-    private maze;
+	private platformMat;
+	private wallMat;
+
+	private collisions = new Collisions();
+    // private ball:Ball = new Ball;
+
 
 	private maze01 = [
-		[1,1,1,1,1,1,1,1,1,1],
-		[1,0,1,0,0,0,0,0,0,1],
-		[1,0,1,0,0,0,0,0,0,1],
-		[1,0,1,1,1,1,1,1,0,1],
+		[1,"p","p",1,1,1,1,1,1,1],
+		[1,"c",0,1,1,1,1,1,1,1],
+		[1,0,0,1,1,1,1,1,1,1],
+		[1,0,0,1,1,1,1,1,1,1],
 		[1,0,0,0,0,0,0,0,0,1],
 		[1,0,0,0,0,0,0,0,0,1],
-		[1,0,0,0,0,0,0,0,0,1],
-		[1,0,0,0,0,0,0,0,0,1],
-		[1,0,0,0,0,0,0,0,0,1],
+		[1,1,1,1,1,1,1,0,0,1],
+		[1,1,1,1,1,1,1,0,0,1],
+		[1,1,1,1,1,1,1,0,0,1],
 		[1,1,1,1,1,1,1,1,1,1],
 	];
 
     private centerOfMaze;
-	CreateMaze(scene){
-
-
-		this.cubeRandomColor = new BABYLON.StandardMaterial("rMAT",scene);
-		this.cubeRandomColor.diffuseColor = new BABYLON.Color3(Math.random() * 1.0, Math.random() * 1.0, Math.random() * 1.0);
+	CreateMaze(scene, ball){
 		
-		//TODO:Rrregullo Kodin Asynchron
+		// ball = new Ball;
+		//Platform Material
+		this.platformMat = new BABYLON.StandardMaterial("platformMat",scene);
+		this.platformMat.diffuseTexture = new BABYLON.Texture("textures/Wood/Color.jpg",scene);
+		this.platformMat.bumpTexture = new BABYLON.Texture("textures/Wood/NormalGL.jpg",scene);
 		
-		//Static Maze Created with matrix
+
+		//Wall Material
+		this.wallMat = new BABYLON.StandardMaterial("wallMat",scene);
+		this.wallMat.diffuseTexture = new BABYLON.Texture("textures/MarbleWhite/Color.jpg",scene);
+		this.wallMat.bumpTexture = new BABYLON.Texture("textures/MarbleWhite/NormalDX.jpg",scene);
+		this.wallMat.bumpHeight = 10;	
+	
 		this.centerOfMaze = new BABYLON.TransformNode("maze");
+		
 
 
 		for(let y = 0; y < this.maze01.length; y++){
 			for(let x = 0; x < this.maze01[y].length; x++){
+				
 				if(this.maze01[x][y] == 1){
-					this.platform = BABYLON.MeshBuilder.CreateBox("wall",{width:this.cubeSize, height:this.cubeSize, depth:this.cubeSize},scene);
-					this.platform.material = this.cubeRandomColor;
+					this.wallCube = BABYLON.MeshBuilder.CreateBox("wall",{width:this.cubeSize, height:this.cubeSize * 2, depth:this.cubeSize},scene);
 					
-					this.platform.position.x = x * this.cubeSize;
-					this.platform.position.y = 1;
-					this.platform.position.z = y * this.cubeSize;
+					this.wallCube.physicsImpostor = new BABYLON.PhysicsImpostor(this.wallCube,PhysicsImpostor.BoxImpostor,{mass:0,restitution:0,friction:100});
 
-					this.platform.parent = this.centerOfMaze;					
+					this.wallCube.position.x = x * this.cubeSize;
+					this.wallCube.position.y = 1;
+					this.wallCube.position.z = y * this.cubeSize;
+					this.wallCube.material = this.wallMat;
+					this.wallCube.parent = this.centerOfMaze;					
 								
 				}
 				this.platform = BABYLON.MeshBuilder.CreateBox("cube",{width:this.cubeSize,height:0.1,depth:this.cubeSize},scene);
-				this.platform.material = this.cubeRandomColor;
 		
 				this.platform.position.x = x * this.cubeSize;
 				this.platform.position.y = 0;
 				this.platform.position.z = y * this.cubeSize;
 				this.platform.physicsImpostor = new BABYLON.PhysicsImpostor(this.platform,PhysicsImpostor.BoxImpostor,{mass:0,restitution:0,friction:100});
+				this.platform.material = this.platformMat;
 				this.platform.parent = this.centerOfMaze;
+
+				if(this.maze01[x][y] == "p"){
+					this.collisions.createGhostCollider(x * this.cubeSize,1,y * this.cubeSize,this.cubeSize,this.centerOfMaze,scene,ball);
+				}
 				
 			}
 		}
-
-		//Static Maze Created with blender
-		/*
-        var brick = new BABYLON.StandardMaterial("myMaterial", scene);
-        this.centerOfMaze = new BABYLON.TransformNode("maze");
-        brick.diffuseTexture = new BABYLON.Texture("textures/Bricks/Bricks075A_2K_Color.jpg", scene);
-        brick.ambientTexture = new BABYLON.Texture("textures/Bricks/Bricks075A_2K_AmbientOcclusion.jpg", scene);
-        brick.bumpTexture = new BABYLON.Texture("textures/Bricks/Bricks075A_2K_NormalDX.jpg", scene);
-        console.log("first call");
-        this.maze = BABYLON.SceneLoader.ImportMesh("","models/","maze01.babylon",scene,
-             (meshes) => {
-                console.log("second call");
-                meshes[0].material = brick; //Ground or the plane where the walls stand on
-                for (let i = 0; i < meshes.length; i++) {
-                    meshes[i].physicsImpostor = new BABYLON.PhysicsImpostor(
-                        meshes[i],
-                        PhysicsImpostor.BoxImpostor,
-                        {mass: 0, restitution:0,friction:100}
-                    );
-                    meshes[i].parent = this.centerOfMaze;   
-                }
-            }
-        );*/
-
+		console.log(this.centerOfMaze.rotation);
+		// this.centerOfMaze.rotationQuaternion
 		//console.log(this.centerOfMaze.position);
     }
 
     MoveForward(){
-        
-        this.centerOfMaze.rotate(new BABYLON.Vector3(0,0,-1),.01);
-    }
+		if(this.centerOfMaze.rotation.z == -0.10999999999999999){
+			this.centerOfMaze.rotation.z = -0.10999999999999999;
+		}else{
+			this.centerOfMaze.rotation.z -= 0.01;
+		}
+	}
     MoveBack(){
-        this.centerOfMaze.rotate(new BABYLON.Vector3(0,0,1),.01);
+        if(this.centerOfMaze.rotation.z == 0.15){
+			this.centerOfMaze.rotation.z = 0.15;
+		}else{
+			this.centerOfMaze.rotation.z += 0.01;
+		}
     }
     MoveLeft(){
-        this.centerOfMaze.rotate(new BABYLON.Vector3(1,0,0),.01);
+        if(this.centerOfMaze.rotation.x == 0.09){
+			this.centerOfMaze.rotation.x = 0.09;
+		}else{
+			this.centerOfMaze.rotation.x += 0.01;
+		}
     }
     MoveRight(){
-        this.centerOfMaze.rotate(new BABYLON.Vector3(-1,0,0),.01);
+		if(this.centerOfMaze.rotation.x == -0.09){
+			this.centerOfMaze.rotation.x = -0.09;
+		}else{
+			this.centerOfMaze.rotation.x -= 0.01;
+		}
+
     }
 }

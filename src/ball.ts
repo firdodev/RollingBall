@@ -3,17 +3,16 @@ import "@babylonjs/inspector";
 import "@babylonjs/loaders/glTF";
 import * as BABYLON from "@babylonjs/core";
 import "@babylonjs/loaders";
-import { MeshEmitterGridComponent } from "@babylonjs/inspector/components/actionTabs/tabs/propertyGrids/particleSystems/meshEmitterGridComponent";
-import Ammo from "ammo.js";
-import { AmmoJSPlugin, PhysicsImpostor, Vector3 } from "@babylonjs/core";
+import { Mesh, MeshBuilder } from "@babylonjs/core";
 
 export class Ball{
-    public sphere:BABYLON.Mesh;
-
+	private sphereDiameter = 5;
+    public sphere;
     private rotSpeed = .5;
 
+
     CreateBall(scene){
-        this.sphere = BABYLON.MeshBuilder.CreateSphere("sphere", { diameter: 5 }, scene);
+        this.sphere= BABYLON.MeshBuilder.CreateSphere("sphere", { diameter: this.sphereDiameter }, scene);
         this.sphere.position.y = 10;
 		this.sphere.position.x = 25;
 		this.sphere.position.z = 25;
@@ -26,9 +25,15 @@ export class Ball{
         this.sphere.material = sphereMat;
 
         //Physics
-        this.sphere.physicsImpostor = new BABYLON.PhysicsImpostor(this.sphere, PhysicsImpostor.SphereImpostor, {mass:1,friction:1,restitution:0});
-        // this.sphere.physicsImpostor.applyImpulse(new BABYLON.Vector3(0, 5, 0), BABYLON.Vector3.Zero());
-    }
+        this.sphere.physicsImpostor = new BABYLON.PhysicsImpostor(this.sphere, BABYLON.PhysicsImpostor.SphereImpostor, {mass:1});
+    
+		this.sphere.physicsImpostor.physicsBody.linearDamping = 0;
+		this.sphere.physicsImpostor.physicsBody.angularDamping = 0;
+	}
+
+
+
+
 	//Enable this if you want to move the ball with w a s d from the keyboard and the code in app.ts
     /*MoveForward(){
         this.sphere.physicsImpostor.applyImpulse(new BABYLON.Vector3(this.rotSpeed,0,0),BABYLON.Vector3.Zero());
