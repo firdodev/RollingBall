@@ -8,21 +8,22 @@ import Ammo from "ammo.js";
 import { AmmoJSPlugin, MeshBuilder, PhysicsImpostor, Size, Vector3 } from "@babylonjs/core";
 import { Mazes } from "./mazes";
 import { Ball } from "./ball";
-
-class App {
+class App{
     private ball:Ball = new Ball;
     private maze:Mazes = new Mazes;
+    private canvas;
+
+    // private gameH:GameHandler = new GameHandler(this.canvas);
     constructor() {
-    
         // create the canvas html element and attach it to the webpage
-        var canvas = document.createElement("canvas");
-        canvas.style.width = "100%";
-        canvas.style.height = "100%";
-        canvas.id = "gameCanvas";
-        document.body.appendChild(canvas);
+        this.canvas = document.createElement("canvas");
+        this.canvas.style.width = "100%";
+        this.canvas.style.height = "100%";
+        this.canvas.id = "gameCanvas";
+        document.body.appendChild(this.canvas);
 
         // initialize babylon scene and engine
-        var engine = new BABYLON.Engine(canvas, true);
+        var engine = new BABYLON.Engine(this.canvas, true);
         var scene = new BABYLON.Scene(engine);
         // scene.clearColor = new BABYLON.Color4(0,.4,1); ==> Color for background
 
@@ -60,7 +61,7 @@ class App {
         var camera: BABYLON.ArcRotateCamera = new BABYLON.ArcRotateCamera("Camera", 3.15, 0.62, 20, new BABYLON.Vector3(-27.34, 66.92, 21.5), scene);
         
 
-		camera.attachControl(canvas, true);
+		camera.attachControl(this.canvas, true);
         camera.lowerRadiusLimit = 20;
         camera.upperRadiusLimit = 40;
         
@@ -101,21 +102,29 @@ class App {
             scene.render();
             // engine.resize();
 			//console.log(camera.position);
-		});
+            if(this.maze.moveTrigger() == true){
+                scene.removeMesh(this.ball.sphere);
+                this.maze.MoveToNextLevel(scene);
+                this.CreateMeshes(scene);
+                // console.log("Move to next level");
+            }
+        });
     }
 
     async CreatePhysics(scene): Promise<void> {
         const ammo = await Ammo();
         const physics = new AmmoJSPlugin(true,ammo);
         scene.enablePhysics(new Vector3(0,-100,0),physics);
-        
-        this.ball.CreateBall(scene);
-        this.maze.CreateMaze(scene,this.ball);
-
-
+        this.CreateMeshes(scene);
         // var cube = BABYLON.MeshBuilder.CreateBox("cube",{size:10},scene);
         // cube.physicsImpostor = new BABYLON.PhysicsImpostor(cube,PhysicsImpostor.BoxImpostor,{mass:10,friction:1});
         // cube.position = new BABYLON.Vector3(3,10,0);
+    }
+
+    CreateMeshes(scene){
+        this.ball.CreateBall(scene);
+        this.maze.drawMaze(scene);
+        this.maze.CreateMaze(scene,this.ball);
     }
     
 }

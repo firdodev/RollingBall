@@ -6,7 +6,21 @@ import "@babylonjs/loaders";
 import { PhysicsImpostor} from "@babylonjs/core";
 import { Collisions } from "./collision";
 import { Ball } from "./ball";
+import { Map } from "./map";
 
+//You can change it by making the path with 0 and "p" => for the end of the game
+	// private defaultMaze = [
+	// 	[1,1,1,1,1,1,1,1,1,1],
+	// 	[1,1,1,1,1,1,1,1,1,1],
+	// 	[1,1,1,1,1,1,1,1,1,1],
+	// 	[1,1,1,1,1,1,1,1,1,1],
+	// 	[1,1,1,1,1,1,1,1,1,1],
+	// 	[1,1,1,1,1,1,1,1,1,1],
+	// 	[1,1,1,1,1,1,1,1,1,1],
+	// 	[1,1,1,1,1,1,1,1,1,1],
+	// 	[1,1,1,1,1,1,1,1,1,1],
+	// 	[1,1,1,1,1,1,1,1,1,1],
+	// ];
 export class Mazes{	
 	private cubeSize = 5;
 	private platform;
@@ -15,12 +29,13 @@ export class Mazes{
 	private wallMat;
 
 	private collisions = new Collisions();
+	private map:Map;
     // private ball:Ball = new Ball;
 
 
 	private maze01 = [
 		[1,"p","p",1,1,1,1,1,1,1],
-		[1,"c",0,1,1,1,1,1,1,1],
+		[1,0,0,1,1,1,1,1,1,1],
 		[1,0,0,1,1,1,1,1,1,1],
 		[1,0,0,1,1,1,1,1,1,1],
 		[1,0,0,0,0,0,0,0,0,1],
@@ -31,7 +46,46 @@ export class Mazes{
 		[1,1,1,1,1,1,1,1,1,1],
 	];
 
+	private maze02 = [
+		[1,1,1,1,1,1,1,1,1,1],
+		[1,1,1,1,1,1,1,"p","p",1],
+		[1,1,1,1,1,1,1,0,0,1],
+		[1,0,0,0,0,0,0,0,0,1],
+		[1,0,0,0,0,0,0,0,0,1],
+		[1,0,0,1,0,0,1,1,1,1],
+		[1,0,0,0,0,0,0,0,0,1],
+		[1,0,0,0,0,0,0,0,0,1],
+		[1,1,1,1,1,1,1,0,0,1],
+		[1,1,1,1,1,1,1,1,1,1],
+	];
+
+	private maze03 = [
+		[1,1,1,1,1,1,1,1,1,1],
+		[1,1,1,1,0,0,0,0,0,1],
+		[1,1,1,1,0,0,0,0,0,1],
+		[1,1,1,1,0,0,1,0,0,1],
+		[1,1,1,1,0,0,1,0,0,1],
+		[1,1,1,1,0,0,1,0,0,1],
+		[1,1,1,1,1,1,1,0,0,1],
+		[1,"p",0,0,0,0,0,0,0,1],
+		[1,"p",0,0,0,0,0,0,0,1],
+		[1,1,1,1,1,1,1,1,1,1],
+	];
+
+	private mazes = new Array(this.maze01, this.maze02, this.maze03);
+	private currentMaze = 0;
     private centerOfMaze;
+	drawMaze(scene){
+		//Random level generated
+		// this.map = new Map(this.mazes[Math.floor(Math.random() * this.mazes.length)]);
+		this.map = new Map(this.mazes[1]);
+
+	}
+
+	moveTrigger(){
+		return this.collisions.CheckTrigger();
+	}
+
 	CreateMaze(scene, ball){
 		
 		// ball = new Ball;
@@ -49,12 +103,15 @@ export class Mazes{
 	
 		this.centerOfMaze = new BABYLON.TransformNode("maze");
 		
+		let h = this.map.getHeight();
+		let w = this.map.getWidth();
 
+		let getShape = this.map.getMap();
 
-		for(let y = 0; y < this.maze01.length; y++){
-			for(let x = 0; x < this.maze01[y].length; x++){
+		for(let y = 0; y < h; y++){
+			for(let x = 0; x < w; x++){
 				
-				if(this.maze01[x][y] == 1){
+				if(getShape[x][y] == 1){
 					this.wallCube = BABYLON.MeshBuilder.CreateBox("wall",{width:this.cubeSize, height:this.cubeSize * 2, depth:this.cubeSize},scene);
 					
 					this.wallCube.physicsImpostor = new BABYLON.PhysicsImpostor(this.wallCube,PhysicsImpostor.BoxImpostor,{mass:0,restitution:0,friction:100});
@@ -75,7 +132,7 @@ export class Mazes{
 				this.platform.material = this.platformMat;
 				this.platform.parent = this.centerOfMaze;
 
-				if(this.maze01[x][y] == "p"){
+				if(getShape[x][y] == "p"){
 					this.collisions.createGhostCollider(x * this.cubeSize,1,y * this.cubeSize,this.cubeSize,this.centerOfMaze,scene,ball);
 				}
 				
@@ -85,6 +142,23 @@ export class Mazes{
 		// this.centerOfMaze.rotationQuaternion
 		//console.log(this.centerOfMaze.position);
     }
+
+	MoveToNextLevel(scene){
+        // if(this.moveTrigger() == true){
+		console.log(this.moveTrigger());
+		let h = this.map.getHeight();
+		let w = this.map.getWidth();
+		for(let y = 0; y < h; y++){
+			for(let x = 0; x < w; x++){
+				// this.wallCube.dispose();
+				// this.platform.dispose();
+				// this.drawMaze(scene);
+				this.centerOfMaze.dispose();
+				this.currentMaze++;
+				this.drawMaze(scene);
+			}
+		}
+	}
 
     MoveForward(){
 		if(this.centerOfMaze.rotation.z == -0.10999999999999999){
@@ -113,6 +187,5 @@ export class Mazes{
 		}else{
 			this.centerOfMaze.rotation.x -= 0.01;
 		}
-
     }
 }
