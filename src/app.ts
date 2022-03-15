@@ -1,6 +1,7 @@
 import "@babylonjs/core/Debug/debugLayer";
 import "@babylonjs/inspector";
 import "@babylonjs/loaders/glTF";
+import "babylonjs-gui";
 import * as BABYLON from "@babylonjs/core";
 import "@babylonjs/loaders";
 import * as WATERMAT from "@babylonjs/materials"
@@ -8,6 +9,7 @@ import Ammo from "ammo.js";
 import { AmmoJSPlugin, MeshBuilder, PhysicsImpostor, Size, Vector3 } from "@babylonjs/core";
 import { Mazes } from "./mazes";
 import { Ball } from "./ball";
+import * as GUI from "babylonjs-gui";
 class App{
     private ball:Ball = new Ball;
     private maze:Mazes = new Mazes;
@@ -27,7 +29,7 @@ class App{
         var scene = new BABYLON.Scene(engine);
         // scene.clearColor = new BABYLON.Color4(0,.4,1); ==> Color for background
 
-        //Skybox
+        // Skybox
         var skybox = BABYLON.MeshBuilder.CreateBox("skyBox", { size: 3000.0 }, scene);
         var skyboxMaterial = new BABYLON.StandardMaterial("skyBox", scene);
         skyboxMaterial.backFaceCulling = false;
@@ -38,21 +40,21 @@ class App{
         skyboxMaterial.disableLighting = true;
 		skybox.material = skyboxMaterial;
         
-	// Water
-	var waterMesh = BABYLON.Mesh.CreateGround("waterMesh", 2048, 2048, 16, scene, false);
-	var water = new WATERMAT.WaterMaterial("water", scene, new BABYLON.Vector2(512, 512));
-	waterMesh.position.y = -20;
-	water.backFaceCulling = true;
-	water.bumpTexture = new BABYLON.Texture("textures/waterbump.png", scene);
-	water.windForce = -20;
-	water.waveHeight = 1.7;
-	water.bumpHeight = 0.1;
-	water.windDirection = new BABYLON.Vector2(1, 1);
-	water.waterColor = new BABYLON.Color3(0, 0, 221 / 255);
-	water.colorBlendFactor = 0.0;
-	water.addToRenderList(skybox);
+        // Water
+        var waterMesh = BABYLON.Mesh.CreateGround("waterMesh", 2048, 2048, 16, scene, false);
+        var water = new WATERMAT.WaterMaterial("water", scene, new BABYLON.Vector2(512, 512));
+        waterMesh.position.y = -20;
+        water.backFaceCulling = true;
+        water.bumpTexture = new BABYLON.Texture("textures/waterbump.png", scene);
+        water.windForce = -20;
+        water.waveHeight = 1.7;
+        water.bumpHeight = 0.1;
+        water.windDirection = new BABYLON.Vector2(1, 1);
+        water.waterColor = new BABYLON.Color3(0, 0, 221 / 255);
+        water.colorBlendFactor = 0.0;
+        water.addToRenderList(skybox);
 
-	waterMesh.material = water;
+        waterMesh.material = water;
 
         //Creates Physics and Meshes
         this.CreatePhysics(scene);
@@ -68,6 +70,17 @@ class App{
         //Create Light
         var light1: BABYLON.HemisphericLight = new BABYLON.HemisphericLight("light1", new BABYLON.Vector3(1, 1, 0), scene);
 		light1.intensity = .7;
+
+        var advancedTexture = GUI.AdvancedDynamicTexture.CreateFullscreenUI("myUI", false, scene);
+        
+        var title = new GUI.TextBlock();
+        title.text = "Level 0";
+        title.fontSize = 54;
+        title.color = "white";
+        title.top = "-300px";
+        title.fontWeight = "600";
+        title.zIndex = 10;
+        advancedTexture.addControl(title);
         
 		// hide/show the Inspector
         window.addEventListener("keydown", (ev) => {

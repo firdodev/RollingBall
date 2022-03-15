@@ -21,6 +21,8 @@
   },
   "dependencies": {
     "@babylonjs/loaders": "^4.2.1",
-    "ammo.js": "github:kripken/ammo.js"
+    "ammo.js": "github:kripken/ammo.js",
+    "babylonjs": "^4.2.2",
+    "babylonjs-gui": "^4.2.2"
   }
 }

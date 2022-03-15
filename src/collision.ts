@@ -36,13 +36,6 @@ export class Collisions{
 
 
     public moveToNextLevel(ball,scene){
-        // console.log('-------',test,'111',this.ball);
-        // ball.sphere.physicsImpostor.registerOnPhysicsCollide(
-        //     this.collider.physicsImpostor,
-        //     ()=>{
-        //         this.touching = true;
-        //     }
-        // );
         scene.registerBeforeRender(()=>{
             if(this.collider.intersectsMesh(ball.sphere)){
                 this.touching = true;

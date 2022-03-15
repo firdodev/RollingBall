@@ -72,13 +72,31 @@ export class Mazes{
 		[1,1,1,1,1,1,1,1,1,1],
 	];
 
-	private mazes = new Array(this.maze01, this.maze02, this.maze03);
+	private endMaze = [
+		[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+		[1,0,0,0,1,1,1,1,1,1,1,0,1,1,1],
+		[1,0,1,1,1,1,1,1,1,1,1,0,1,1,1],
+		[1,0,0,1,1,0,0,0,1,0,0,0,1,1,1],
+		[1,0,1,1,1,0,1,0,1,0,1,0,1,1,1],
+		[1,0,0,0,1,0,1,0,1,0,0,0,1,1,1],
+		[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+		[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+		[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+		[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+		[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+		[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+		[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+		[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+		[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+	];
+
+	private mazes = new Array(this.maze01, this.maze02, this.maze03, this.endMaze);
 	private currentMaze = 0;
     private centerOfMaze;
 	drawMaze(scene){
 		//Random level generated
 		// this.map = new Map(this.mazes[Math.floor(Math.random() * this.mazes.length)]);
-		this.map = new Map(this.mazes[1]);
+		this.map = new Map(this.mazes[this.currentMaze]);
 
 	}
 
@@ -144,17 +162,13 @@ export class Mazes{
     }
 
 	MoveToNextLevel(scene){
-        // if(this.moveTrigger() == true){
 		console.log(this.moveTrigger());
 		let h = this.map.getHeight();
 		let w = this.map.getWidth();
+		this.currentMaze+=1;
 		for(let y = 0; y < h; y++){
 			for(let x = 0; x < w; x++){
-				// this.wallCube.dispose();
-				// this.platform.dispose();
-				// this.drawMaze(scene);
 				this.centerOfMaze.dispose();
-				this.currentMaze++;
 				this.drawMaze(scene);
 			}
 		}

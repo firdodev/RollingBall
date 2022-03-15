@@ -31,6 +31,14 @@ export class Ball{
 		this.sphere.physicsImpostor.physicsBody.angularDamping = 0;
 	}
 
+    getX():number{
+        return this.sphere.x;
+    }
+
+    getZ(){
+        return this.sphere.z;
+    }
+
 
 
 
